@@ -1,0 +1,82 @@
+# .github/workflows/eas-build.yml
+name: EAS Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Permet de lancer manuellement
+    inputs:
+      platform:
+        description: 'Platform to build for'
+        required: true
+        default: 'android'
+        type: choice
+        options:
+        - android
+        - ios
+        - all
+
+jobs:
+  build:
+    name: Build and Submit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: tZa430q_N_DUkORo9jyjxr-wNvZ3zru-0WPJxnOX
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .easignore
+        run: |
+          cat > .easignore << 'EOF'
+          node_modules/
+          .git/
+          .expo/
+          dist/
+          build/
+          coverage/
+          logs/
+          *.log
+          .DS_Store
+          Thumbs.db
+          .vscode/
+          .idea/
+          assets/videos/
+          assets/large-images/
+          docs/
+          screenshots/
+          temp/
+          tmp/
+          **/*.mov
+          **/*.mp4
+          **/*.avi
+          **/*.mkv
+          **/*.pdf
+          **/*.zip
+          **/*.rar
+          **/*.7z
+          **/*.tar.gz
+          EOF
+
+      - name: Build for Android
+        if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || github.event.inputs.platform == '' }}
+        run: eas build --platform android --non-interactive
+
+      - name: Build for iOS
+        if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
+        run: eas build --platform ios --non-interactive
