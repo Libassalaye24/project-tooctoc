@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "toctoc",
-    "slug": "toctoc",
+    "name": "toctoc-expo-nativewind",
+    "slug": "toctoc-expo-nativewind",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -39,14 +39,14 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "3448f8d2-e567-4149-b353-f2d3b78e7050"
+        "projectId": "dff31389-d904-4178-a827-5a271d68b52c"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/3448f8d2-e567-4149-b353-f2d3b78e7050"
+      "url": "https://u.expo.dev/dff31389-d904-4178-a827-5a271d68b52c"
     },
     "android": {
       "permissions": [],
