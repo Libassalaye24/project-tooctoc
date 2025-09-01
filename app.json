@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Toctoc",
+    "name": "toctoc",
     "slug": "toctoc",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -39,14 +39,14 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4b2d9b30-6621-4e99-be03-e5699015fdd3"
+        "projectId": "3448f8d2-e567-4149-b353-f2d3b78e7050"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/dff31389-d904-4178-a827-5a271d68b52c"
+      "url": "https://u.expo.dev/3448f8d2-e567-4149-b353-f2d3b78e7050"
     },
     "android": {
       "permissions": [],
