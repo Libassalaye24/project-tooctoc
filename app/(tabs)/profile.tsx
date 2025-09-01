@@ -132,7 +132,7 @@ const renderSkeletonLoader = () => (
             style={{
               flexDirection: "row",
               alignItems: "center",
-              padding: 10,
+              padding: 10
             }}
           >
             <View
