@@ -11,7 +11,7 @@ on:
       platform:
         description: 'Platform to build for'
         required: true
-        default: 'all'
+        default: 'android'
         type: choice
         options:
         - android
