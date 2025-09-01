@@ -75,7 +75,7 @@ jobs:
 
       - name: Build for Android
         if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || github.event.inputs.platform == '' }}
-        run: eas build --platform android --non-interactive
+        run: eas build --platform android
 
       - name: Build for iOS
         if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
