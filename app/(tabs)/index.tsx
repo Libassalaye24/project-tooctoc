@@ -118,9 +118,16 @@ export default function HomeScreen() {
 
   const handleLike = async (id: string) => {
 
+    
+     setVideosTest(videosTest.map(video => 
+      video.id === Number(id) 
+        ? { ...video, likedByCurrentUser: !video.likedByCurrentUser }
+        : video
+    ));
+
     setVideosTest(videosTest.map(video => 
       video.id === Number(id) 
-        ? { ...video, likedByCurrentUser: video.likedByCurrentUser, likeCount: video.likedByCurrentUser ? video.likeCount - 1 : video.likeCount + 1 }
+        ? { ...video,likeCount: video.likedByCurrentUser ? video.likeCount - 1 : video.likeCount + 1 }
         : video
     ));
 

@@ -28,8 +28,13 @@
       "android": {
         "buildType": "apk"
       }
+    },
+    "expo-go": {
+      "channel": "development",
+      "distribution": "internal"
     }
   },
+
   "submit": {
     "production": {}
   }
