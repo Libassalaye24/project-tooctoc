@@ -7,8 +7,18 @@ export interface CommentDTO {
     createdAt: string;
     isLiked : false;
     likedByCurrentUser: boolean;
-    userProfile: any;
+    userProfile: UserProfile;
 }
+
+export interface UserProfile {
+  id: number;
+  login: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string | null;
+  isCertified: boolean;
+}
+
 
 export interface HLSVideoPlayerProps {
   uri: string;
