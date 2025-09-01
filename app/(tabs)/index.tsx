@@ -119,18 +119,45 @@ export default function HomeScreen() {
   const handleLike = async (id: string) => {
 
     
-     setVideosTest(videosTest.map(video => 
-      video.id === Number(id) 
-        ? { ...video, likedByCurrentUser: !video.likedByCurrentUser }
-        : video
-    ));
+    //  setVideosTest(videosTest.map(video => 
+    //   video.id === Number(id) 
+    //     ? { ...video, likedByCurrentUser: !video.likedByCurrentUser }
+    //     : video
+    // ));
 
-    setVideosTest(videosTest.map(video => 
-      video.id === Number(id) 
-        ? { ...video,likeCount: video.likedByCurrentUser ? video.likeCount - 1 : video.likeCount + 1 }
-        : video
-    ));
+    // setVideosTest(videosTest.map(video => 
+    //   video.id === Number(id) 
+    //     ? { ...video,likeCount: video.likedByCurrentUser ? video.likeCount - 1 : video.likeCount + 1 }
+    //     : video
+    // ));
 
+    const videoId = Number(id);
+  
+  // Trouve la vidéo actuelle pour éviter les calculs multiples
+  const currentVideo = videosTest.find(video => video.id === videoId);
+  if (!currentVideo) {
+    console.error(`Video with id ${videoId} not found`);
+    return;
+  }
+
+  // Calcule le nouvel état
+  const newLikedState = !currentVideo.likedByCurrentUser;
+  const newLikeCount = newLikedState 
+    ? currentVideo.likeCount + 1 
+    : currentVideo.likeCount - 1;
+
+  // Optimistic Update - mise à jour immédiate de l'UI
+  const updateVideo = (video: ToctocVideo) => 
+    video.id === videoId 
+      ? { 
+          ...video, 
+          likedByCurrentUser: newLikedState,
+          likeCount: Math.max(0, newLikeCount) // Évite les nombres négatifs
+        }
+      : video;
+
+  const previousVideosState = [...videosTest]; // Sauvegarde pour rollback
+  setVideosTest(videosTest.map(updateVideo));
     try {
       const response = await apiService.likeVideo(Number(id));
       if (response.success && response.data) {
@@ -280,9 +307,14 @@ export default function HomeScreen() {
   }
   
 
-  const handleAddComment = (text: string) => {
-
+  const handleAddComment = (videoId: string) => {
+    setVideosTest(videosTest.map(video => 
+      video.id === Number(videoId) 
+        ? { ...video, commentCount: (video.commentCount ?? 0) + 1 }
+        : video
+    ));
   };
+
 
   const handleLikeComment = async (commentId: string) => {
     console.log("handleLikeComment ", commentId);

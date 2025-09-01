@@ -94,7 +94,7 @@ export default function CommentsModal({
     <View style={styles.commentItem}>
       <View style={styles.avatar}>
         <Text style={styles.avatarText}>
-          a
+         a
         </Text>
       </View>
       <View style={styles.commentContent}>
@@ -108,7 +108,7 @@ export default function CommentsModal({
       </View>
       <TouchableOpacity
         style={styles.likeButton}
-        disabled={item.likedByCurrentUser}
+      
         onPress={
           () => {
              likeComment(item.id);
@@ -148,6 +148,7 @@ export default function CommentsModal({
       try {
         const resp = await apiService.likeComment(Number(commentId));
         console.log("Response like commenrt ", resp)
+        likeComment(Number(commentId));
         await loadCOmmentsByVideoId(videoId);
       } catch (error) {
         console.error("Une erreur est survenue ", error)
@@ -165,6 +166,7 @@ export default function CommentsModal({
         
         if (response.success && response.data) {
 
+          onAddComment(videoId)
           loadCOmmentsByVideoId(videoId);
         } 
       }catch {
@@ -206,7 +208,7 @@ export default function CommentsModal({
             renderItem={renderComment}
             keyExtractor={(item) => item.id.toString()}
             style={styles.commentsList}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
             contentContainerStyle={styles.commentsContent}
             ListEmptyComponent={
               <View style={styles.emptyState}>

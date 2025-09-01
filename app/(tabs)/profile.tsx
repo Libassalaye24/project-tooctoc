@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Dimensions, Alert, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Settings, Grid2x2 as Grid, Heart, MessageCircle, LogOut } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mockUserVideos, mockVideosTest } from '@/data/mockData';
 import { router } from 'expo-router';
 import { apiService, ToctocVideo } from '@/services/api';
+import SkeletonLoading from 'expo-skeleton-loading'
+
 
 const { width } = Dimensions.get('window');
 const videoWidth = width / 3 - 2;
@@ -20,7 +22,7 @@ export default function ProfileScreen() {
   
   useEffect(() => {
     loadUserData();
-    // loadUserVideos();
+    loadUserVideos();
   }, []);
 
   const loadUserData = async () => {
@@ -52,35 +54,24 @@ export default function ProfileScreen() {
     };
 
   const handleLogout = () => {
-    // Alert.alert(
-    //   'Déconnexion',
-    //   'Êtes-vous sûr de vouloir vous déconnecter ?',
-    //   [
-    //     {
-    //       text: 'Annuler',
-    //       style: 'cancel',
-    //     },
-    //     {
-    //       text: 'Déconnexion',
-    //       style: 'destructive',
-    //       onPress: async () => {
-    //         try {
-    //           await AsyncStorage.multiRemove(['userToken', 'userPhone']);
-    //           // Restart the app to show auth screen
-    //           router.replace('/');
-    //         } catch (error) {
-    //           console.error('Error during logout:', error);
-    //         }
-    //       },
-    //     },
-    //   ]
-    // );
+  
     AsyncStorage.multiRemove(['userToken', 'userPhone', 'tokenToctoc']).then();          
     router.replace('/');
   };
 
+  const navigateToVideo = (video: ToctocVideo) => {
+    router.push({
+      pathname: '/video/[id]',
+      params: { id: video.id.toString(), videoDataInfo: JSON.stringify(video) }
+    });
+  };
+
   const renderVideoItem = ({ item }: { item: ToctocVideo }) => (
-    <TouchableOpacity style={styles.videoItem}>
+    <TouchableOpacity 
+    style={styles.videoItem}
+    onPress={
+      () => navigateToVideo(item)
+    }>
       <Image source={{ uri: item.thumbnailUrl }} style={styles.videoThumbnail} />
       <View style={styles.videoOverlay}>
         <Text style={styles.videoViews}>{item.id}</Text>
@@ -89,6 +80,9 @@ export default function ProfileScreen() {
   );
 
   const renderContent = () => {
+    if (loading) {
+    return renderSkeletonLoader();
+    }
     if (selectedTab === 'videos') {
       return (
         <FlatList
@@ -109,6 +103,78 @@ export default function ProfileScreen() {
       );
     }
   };
+
+
+const renderSkeletonLoader = () => (
+  <SkeletonLoading background={"#adadad"} highlight={"#ffffff"}>
+    <View style={{ flexDirection: "column", padding: 10 }}>
+      {[...Array(5)].map((_, index) => (
+        <View
+          key={index}
+          style={{
+            marginBottom: 20,
+            backgroundColor: "#e0e0e0",
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+        >
+          {/* Miniature vidéo */}
+          <View
+            style={{
+              width: "100%",
+              height: 200,
+              backgroundColor: "#adadad",
+            }}
+          />
+
+          {/* Ligne avatar + pseudo */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: "#adadad",
+                marginRight: 10,
+              }}
+            />
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              <View
+                style={{
+                  width: "60%",
+                  height: 12,
+                  backgroundColor: "#adadad",
+                  borderRadius: 4,
+                  marginBottom: 6,
+                }}
+              />
+              <View
+                style={{
+                  width: "40%",
+                  height: 12,
+                  backgroundColor: "#adadad",
+                  borderRadius: 4,
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      ))}
+    </View>
+  </SkeletonLoading>
+);
+
+
 
   return (
     <View style={styles.container}>
@@ -294,5 +360,11 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 16,
     marginTop: 10,
+  },
+});
+
+const styles3 = StyleSheet.create({
+  container: {
+    padding: 20,
   },
 });

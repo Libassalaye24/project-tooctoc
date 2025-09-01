@@ -1,6 +1,8 @@
 import { apiService, ToctocVideo } from '@/services/api';
 import { useEvent } from 'expo';
+import { ResizeMode, Video } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import {
   Heart,
@@ -9,7 +11,7 @@ import {
   Play,
   Share,
 } from 'lucide-react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -133,6 +135,23 @@ export default function VideoScreen({
     }
   };
 
+  useFocusEffect(
+  useCallback(() => {
+    // quand l'écran est focus → rien à faire
+    return () => {
+      // quand on quitte l'écran → pause si le player existe
+      if (player && typeof player.pause === "function") {
+        try {
+          player.pause();
+        } catch (e) {
+          console.log("Erreur lors de la pause du player :", e);
+        }
+      }
+    };
+  }, [player])
+);
+
+
   return (
     <View style={styles.videoContainer}>
       <TouchableOpacity
@@ -140,7 +159,7 @@ export default function VideoScreen({
         activeOpacity={1}
         onPress={togglePlayPauseTocToc}
       >
-        <VideoView
+        {/* <VideoView
           style={styles.video}
           player={player}
           allowsFullscreen
@@ -150,6 +169,15 @@ export default function VideoScreen({
           ref={(ref) => {
             videoRefs.current[videoToc.id] = ref;
           }}
+        /> */}
+
+         <Video
+          ref={videoRefs.current[videoToc.id]}
+          source={{ uri: videoToc.videoUrl }}
+          style={styles.video}
+          shouldPlay={isPlaying}
+          isLooping
+          resizeMode={ResizeMode.CONTAIN}
         />
 
         {/* Play button overlay */}
