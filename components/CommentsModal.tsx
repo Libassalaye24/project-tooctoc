@@ -68,31 +68,20 @@ export default function CommentsModal({
     }
   };
 
-  // const likeComment = (commentId: number) => {
-  //     setCommentData(prev =>
-  //       prev.map((comment: any) =>
-  //         comment.id === commentId
-  //           ? {
-  //               ...comment,
-  //               likedByCurrentUser: !comment.likedByCurrentUser
-  //             }
-  //           : comment
-  //       )
-  //     );
-  // };
-
   const likeComment = (commentId: number) => {
-  setCommentData(prev =>
-    prev.map((comment: CommentDTO) =>
-      comment.id === commentId
-        ? {
-            ...comment,
-            likedByCurrentUser: !comment.likedByCurrentUser,
-          }
-        : comment
-    )
-  );
-};
+      setCommentData(prev =>
+        prev.map((comment: any) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                likedByCurrentUser: !comment.likedByCurrentUser
+              }
+            : comment
+        )
+      );
+  };
+
+
 
   const formatTimestamp = (timestamp: string) => {
     const now = new Date();
@@ -201,7 +190,7 @@ export default function CommentsModal({
       try {
         const resp = await apiService.likeComment(Number(commentId));
         console.log("Response like commenrt ", resp)
-        likeComment(Number(commentId));
+        // likeComment(Number(commentId));
         if (reloading) {
           await loadCOmmentsByVideoId(videoId);
         }
@@ -236,6 +225,10 @@ export default function CommentsModal({
        loadCOmmentsByVideoId(videoId);
      }
   }, [videoId]);
+
+  useEffect(() => {
+    setCommentData(commentsData);
+  }, [commentsData]);
 
   return (
     <Modal
